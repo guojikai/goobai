@@ -1,0 +1,35 @@
+{
+  "name": "goobai",
+  "version": "0.1.0",
+  "description": "Google and Baidu",
+  "private": true,
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "normalize.css": "^3.0.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-jshint": "^1.9.2",
+    "gulp-livereload": "^3.8.1",
+    "gulp-minify-css": "^1.1.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.1.0",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.4",
+    "gulp-webpack": "^1.5.0"
+  },
+  "apidoc": {},
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    },
+    {
+      "packagist": false
+    }
+  ]
+}

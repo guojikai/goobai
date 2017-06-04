@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8" />
+<title>Goobai 选项设置</title>
+<style>
+body {
+    direction: ltr;
+    font-family:  Arial, sans-serif;
+    font-size: 13px;
+}
+
+input {
+    -webkit-border-radius: 2px;
+    border: 1px solid #AAA;
+    font-size: inherit;
+    padding: 3px;
+}
+
+h1 {
+    margin: 0;
+    padding: 8px 0;
+    font-size: 200%;
+    font-weight: normal;
+    text-indent: 40px;
+    color: #53637D;
+    text-shadow: white 0 1px 2px;
+    background: transparent url('../resources/icon.png') center left no-repeat;
+}
+
+section {
+    border-top: 1px solid #eee;
+    margin-top: 17px;
+}
+
+</style>
+<!-- <link href="resources/options.css" rel="stylesheet" /> -->
+</head>
+<body>
+<h1>Goobai 选项设置</h1>
+<section>
+    <h3>切换设置</h3>
+    <div>加入切换按钮 <input type="checkbox" id="switchFlagBox" /></div>
+    <h3>广告设置</h3>
+    <div>高亮百度广告 <input type="checkbox" id="filterBaiduAdFlagBox" /></div>
+</section>
+<div id="tip" style="margin-top: 12px; color: green; font-weight: bold; font-size: 14px;"></div>
+<section style="padding-top: 15px;">
+    问题反馈：<br />
+    GitHub: <a href="https://github.com/guojikai/goobai" target="_blank">github.com/guojikai/goobai</a><br />
+    微博：<a href="https://weibo.com/guojikai" target="_blank">weibo.com/guojikai</a><br />
+    知乎：<a href="https://www.zhihu.com/people/guojikai" target="_blank">www.zhihu.com/people/guojikai</a>
+</section>
+<script src="resources/lib.js"></script>
+<script src="resources/options.js"></script>
+</body>
+
