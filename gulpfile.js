@@ -18,12 +18,12 @@ gulp.task('build_app', function () {
         .pipe(livereload());
     gulp.src(['./src/app.js'])
         .pipe(concat('app.js'))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest('./resources/'))
         .pipe(livereload());
     gulp.src(['./src/options.js'])
         .pipe(concat('options.js'))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest('./resources/'))
         .pipe(livereload());
 });
