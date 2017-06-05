@@ -14,17 +14,17 @@ gulp.task('build_app', function () {
     gulp.src(['./node_modules/jquery/dist/jquery.min.js'])
         .pipe(concat('lib.js'))
         //.pipe(uglify())
-        .pipe(gulp.dest('./build/resources/'))
+        .pipe(gulp.dest('./test/resources/'))
         .pipe(livereload());
     gulp.src(['./src/app.js'])
         .pipe(concat('app.js'))
         // .pipe(uglify())
-        .pipe(gulp.dest('./build/resources/'))
+        .pipe(gulp.dest('./test/resources/'))
         .pipe(livereload());
     gulp.src(['./src/options.js'])
         .pipe(concat('options.js'))
         // .pipe(uglify())
-        .pipe(gulp.dest('./build/resources/'))
+        .pipe(gulp.dest('./test/resources/'))
         .pipe(livereload());
 });
 // 监视文件改动 打包 app 文件，并刷新浏览器
