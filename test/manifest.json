@@ -3,12 +3,17 @@
     "name": "Goobai",
     "version": "0.1.0",
     "description": "谷歌百度一键切换",
+    "homepage_url": "https://github.com/guojikai/goobai",
 
     "permissions": [
         "storage",
         "*://*.google.com/*",
         "*://*.baidu.com/*"
     ],
+
+    "icons": {
+        "48": "resources/icon.png"
+    },
 
     "options_page": "options.html",
     "page_action": {
