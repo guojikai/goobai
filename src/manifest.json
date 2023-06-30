@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "Goobai",
+    "version": "0.1.1",
+    "description": "谷歌百度一键切换及广告处理。",
+    "homepage_url": "https://github.com/guojikai/goobai",
+    "author": "guojikai@gmail.com",
+    "icons": {
+        "48": "resources/icon.png"
+    },
+
+    "permissions": [
+        "storage"
+    ],
+    "host_permissions": [
+        "*://*.google.com/*",
+        "*://*.baidu.com/*"
+    ],
+
+    "options_page": "options.html",
+    "action": {
+      "default_icon": "resources/icon.png",
+      "default_popup": "popup.html",
+      "default_title": "Goobai 谷歌百度一键切换及广告处理"
+    },
+
+    "content_scripts": [{
+        "matches": ["*://www.google.com/*", "*://www.baidu.com/*"],
+        "js": ["libs/jquery.3.2.1.min.js", "app.js"]
+    }]
+}

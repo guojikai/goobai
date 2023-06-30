@@ -1,5 +1,5 @@
 # Goobai
-Goobai，Chrome 插件，谷歌百度快速切换，并高亮广告。
+Goobai，Chrome 插件，谷歌百度一键切换，并可高亮（或移除）广告。
 
 安装
 ----

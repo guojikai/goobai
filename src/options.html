@@ -37,20 +37,23 @@ section {
 </head>
 <body>
 <h1>Goobai 选项设置</h1>
-<section>
+<div style="color: #999;">提供谷歌百度一键切换功能及广告处理。</div>
+<section id="boxes">
     <h3>切换设置</h3>
     <div>加入切换按钮 <input type="checkbox" id="switchFlagBox" /></div>
     <h3>广告设置</h3>
-    <div>高亮百度广告 <input type="checkbox" id="filterBaiduAdFlagBox" /></div>
+    <div>高亮百度广告 <input type="checkbox" id="highlightBaiduAdFlagBox" /> 移除百度广告 <input type="checkbox" id="removeBaiduAdFlagBox" /></div>
+    <div style="margin-top: 15px;">高亮谷歌广告 <input type="checkbox" id="highlightGoogleAdFlagBox" /> 移除谷歌广告 <input type="checkbox" id="removeGoogleAdFlagBox" /></div>
 </section>
-<div id="tip" style="margin-top: 12px; color: green; font-weight: bold; font-size: 14px;"></div>
+<div id="tip" style="margin-top: 12px; color: green; font-weight: bold; font-size: 12px;"></div>
 <section style="padding-top: 15px;">
     问题反馈：<br />
     GitHub: <a href="https://github.com/guojikai/goobai" target="_blank">github.com/guojikai/goobai</a><br />
     微博：<a href="https://weibo.com/guojikai" target="_blank">weibo.com/guojikai</a><br />
     知乎：<a href="https://www.zhihu.com/people/guojikai" target="_blank">www.zhihu.com/people/guojikai</a>
 </section>
-<script src="resources/lib.js"></script>
-<script src="resources/options.js"></script>
+<script src="libs/jquery.3.2.1.min.js"></script>
+<script src="options.js"></script>
 </body>
+</html>
 

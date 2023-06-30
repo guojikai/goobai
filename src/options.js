@@ -2,11 +2,8 @@
 class Options {
 
     constructor() {
-        var self = this;
-        this.restoreOptions(function(opts) {
-            self.optSwitchFlag = opts.switchFlag;
-            self.optFilterBaiduAdFlag = opts.filterBaiduAdFlag;
-            self.render();
+        this.restoreOptions(() => {
+            this.render();
         });
         this.bindActions();
     }
@@ -14,35 +11,50 @@ class Options {
     restoreOptions(callback) {
         chrome.storage.sync.get({
             switchFlag: true,
-            filterBaiduAdFlag: true
-        }, function(opts) {
-            callback(opts);
+            highlightGoogleAdFlag: true,
+            removeGoogleAdFlag: false,
+            highlightBaiduAdFlag: true,
+            removeBaiduAdFlag: false
+        }, (options) => {
+            this.options = options
+            callback();
         });
     }
 
-    saveOptions() {
-        this.optSwitchFlag = $('#switchFlagBox').prop('checked');
-        this.optFilterBaiduAdFlag = $('#filterBaiduAdFlagBox').prop('checked');
-        chrome.storage.sync.set({
-            switchFlag: this.optSwitchFlag,
-            filterBaiduAdFlag: this.optFilterBaiduAdFlag
-        }, function() {
+    saveOptions(ele) {
+        if ($(ele.currentTarget).attr('id') == 'highlightBaiduAdFlagBox' && $('#highlightBaiduAdFlagBox').prop('checked')) $('#removeBaiduAdFlagBox').prop('checked', false)
+        if ($(ele.currentTarget).attr('id') == 'removeBaiduAdFlagBox' && $('#removeBaiduAdFlagBox').prop('checked')) $('#highlightBaiduAdFlagBox').prop('checked', false)
+        if ($(ele.currentTarget).attr('id') == 'highlightGoogleAdFlagBox' && $('#highlightGoogleAdFlagBox').prop('checked')) $('#removeGoogleAdFlagBox').prop('checked', false)
+        if ($(ele.currentTarget).attr('id') == 'removeGoogleAdFlagBox' && $('#removeGoogleAdFlagBox').prop('checked')) $('#highlightGoogleAdFlagBox').prop('checked', false)
+
+        this.options.switchFlag = $('#switchFlagBox').prop('checked');
+        this.options.highlightBaiduAdFlag = $('#highlightBaiduAdFlagBox').prop('checked');
+        this.options.removeBaiduAdFlag = $('#removeBaiduAdFlagBox').prop('checked');
+        this.options.highlightGoogleAdFlag = $('#highlightGoogleAdFlagBox').prop('checked');
+        this.options.removeGoogleAdFlag = $('#removeGoogleAdFlagBox').prop('checked');
+        if (this.options.removeBaiduAdFlag) this.options.highlightBaiduAdFlag = false
+        if (this.options.removeGoogleAdFlag) this.options.highlightGoogleAdFlag = false
+
+        chrome.storage.sync.set(this.options, () => {
             $('#tip').text('保存成功！');
-            setTimeout(function() {
+            setTimeout(() => {
                 $('#tip').text('');
             }, 750);
         });
     }
 
     bindActions() {
-        var self = this;
-        $('#switchFlagBox').click(this.saveOptions);
-        $('#filterBaiduAdFlagBox').click(this.saveOptions);
+        $('#boxes input').on('click', (e) => {
+            this.saveOptions(e)
+        });
     }
 
     render() {
-        $('#switchFlagBox').prop('checked', this.optSwitchFlag);
-        $('#filterBaiduAdFlagBox').prop('checked', this.optFilterBaiduAdFlag);
+        $('#switchFlagBox').prop('checked', this.options.switchFlag);
+        $('#highlightBaiduAdFlagBox').prop('checked', this.options.highlightBaiduAdFlag);
+        $('#removeBaiduAdFlagBox').prop('checked', this.options.removeBaiduAdFlag);
+        $('#highlightGoogleAdFlagBox').prop('checked', this.options.highlightGoogleAdFlag);
+        $('#removeGoogleAdFlagBox').prop('checked', this.options.removeGoogleAdFlag);
     }
 }
 

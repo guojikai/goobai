@@ -1,59 +1,48 @@
 
 class Base {
-    constructor(opts) {
-        this.optSwitchFlag = opts.switchFlag;
-        this.optFilterBaiduAdFlag = opts.filterBaiduAdFlag;
+
+    constructor(options) {
+        this.options = options
     }
 
     restoreOptions(callback) {
         chrome.storage.sync.get({
             switchFlag: true,
-            filterBaiduAdFlag: true
+            removeBaiduAdFlag: true
         }, function(opts) {
             callback(opts);
         });
-    }
-
-    getPageName() {
-        var url = window.location.href.split('?');
-        let pageName = url[0].replace('https://','').replace(window.location.host+'/', '');
-        return pageName;
     }
 }
 
 class Google extends Base {
 
-    constructor(opts) {
-        super(opts);
-        if(this.getPageName() == 'search' && this.optSwitchFlag) { //check switch flag
-            this.initQueryString();
+    constructor(options) {
+        super(options);
+        if(this.options.switchFlag) { //check switch flag
+            this.getQueryString();
             this.addSwitchLink();
         }
         console.info('Goobai: Google initialized!');
     };
 
-    initQueryString() {
-        var self = this;
-        this.queryString = $('#lst-ib').val();
-        $('#lst-ib').change(function() {
-            self.queryString = $('#lst-ib').val();
-        });
+    getQueryString() {
+        return $('#lst-ib').val();
     }
-
 
     addSwitchLink() {
         var self = this;
         let linkButton = $('<input type="button" value="百度一下" />').css({ position: 'absolute', top: 4, left: 800, height: 40, lineHeight: '40px', padding: '0 24px', color: '#fff', fontSize: 16, background: '#3385ff', border: 0, borderBottom: '1px solid #2d78f4', cursor: 'pointer' }).click(function() {
-            self.goAnother();
+            self.gotoGoogle();
         });
         $(linkButton).appendTo('.tsf-p');
     }
 
-    goAnother() {
-        top.location.href = 'https://www.baidu.com/s?ie=utf-8&wd=' + this.queryString;
+    gotoGoogle() {
+        top.location.href = 'https://www.baidu.com/s?ie=utf-8&wd=' + this.getQueryString();
     }
 
-    clearAd() {
+    removeAd() {
         // do something...
     }
 
@@ -61,54 +50,58 @@ class Google extends Base {
 
 class Baidu extends Base {
 
-    constructor(opts) {
-        super(opts);
-        if(this.getPageName() == 's' && this.optSwitchFlag) { //check switch flag
-            this.initQueryString();
+    constructor(options) {
+        super(options);
+        if(this.options.switchFlag) { //check switch flag
+            this.getQueryString();
             this.addSwitchLink();
         }
-        if(this.optFilterBaiduAdFlag) { //check filter ad flag
-            let self = this;
-            self.filterAd();
-            $('body').on('DOMSubtreeModified', '#content_left', function() {
-                setTimeout(function() {
-                    self.filterAd();
-                }, 100);
+        //check ad flags
+        if(this.options.highlightBaiduAdFlag) {
+            this.highlightAd();
+            $('body').on('DOMSubtreeModified', '#content_left', () => {
+                setTimeout(() => { this.highlightAd(); }, 100);
+            });
+        }
+        if(this.options.removeBaiduAdFlag) {
+            this.removeAd();
+            $('body').on('DOMSubtreeModified', '#content_left', () => {
+                setTimeout(() => { this.removeAd(); }, 100);
             });
         }
         console.info('Goobai: Baidu initialized!');
     }
 
-    initQueryString() {
-        var self = this;
-        this.queryString = $('#kw').val();
-        $('#kw').change(function() {
-            self.queryString = $('#kw').val();
-        });
+    getQueryString() {
+        return $('#kw').val();
     }
 
 
     addSwitchLink() {
         var self = this;
-        let linkButton = $('<input type="button" value="Google" class="bg s_btn">').css({ marginLeft: 15, background: '#ea4335', borderBottom: '1px solid #ea4335' }).click(function() {
-            self.goAnother();
+        let linkButton = $('<input type="button" value="Google" class="bg s_btn" style="border-radius: 10px;">').css({ marginLeft: 15, background: '#ea4335', borderBottom: '1px solid #ea4335' }).click(function() {
+            self.gotoBaidu();
         });
+        $('#form .s_btn_wr').css('width', '240px');
         $(linkButton).insertAfter('#form input[type=submit]');
     }
 
-    goAnother() {
-        top.location.href = 'https://www.google.com/search?newwindow=1&q=' + this.queryString;
+    gotoBaidu() {
+        top.location.href = 'https://www.google.com/search?newwindow=1&q=' + this.getQueryString();
     }
 
-    filterAd() {
-        $('#content_left > div[id]').filter(function() {
-            let id = Number( $(this).attr('id') );
-            return id > 1000;
-        }).each(function () {
-            $(this).css({ background: '#fffae7' });
-            $(this).find('span').filter(function() {
-                return $(this).text() == '广告';
-            }).css({ color: '#d41630' });
+    highlightAd() {
+        $('#content_left > div').each((k, ele) => {
+            var isAd = $(ele).attr('class') == undefined
+            if (!isAd) return null;
+            $(ele).css('background', '#fffae7');
+        });
+    }
+    removeAd() {
+        $('#content_left > div').each((k, ele) => {
+            const isAd = $(ele).attr('class') == undefined
+            if (!isAd) return null;
+            $(ele).remove();
         });
     }
 
@@ -120,20 +113,31 @@ class App {
         let self = this;
         chrome.storage.sync.get({
             switchFlag: true,
-            filterBaiduAdFlag: true
-        }, function(opts) {
-            let site = self.getSite();
-            if(/baidu/.test(site)) {
-                new Baidu(opts);
-            } else if(/google/.test(site)) {
-                new Google(opts);
+            highlightGoogleAdFlag: true,
+            removeGoogleAdFlag: false,
+            highlightBaiduAdFlag: true,
+            removeBaiduAdFlag: false
+        }, (options) => {
+            if(self.isBaidu()) {
+                new Baidu(options);
+            } else if(self.isGoogle()) {
+                new Google(options);
             }
         });
-    };
+    }
 
-    getSite() {
-        return window.location.host;
-    };
+    getPageName() {
+        var url = window.location.href.split('?');
+        let pageName = url[0].replace('https://','').replace(window.location.host+'/', '');
+        return pageName;
+    }
+
+    isGoogle() {
+        return /google/.test(window.location.host) && this.getPageName() === 'search'
+    }
+    isBaidu() {
+        return /baidu/.test(window.location.host) && this.getPageName() === 's'
+    }
 
 }
 
